@@ -67,9 +67,22 @@
         - subversion
         - mercurial
         - git
-        - rubygems
         - unzip
       when: ansible_os_family == 'Debian'
+
+    - name: Install ubuntu 12.04 ansible dependencies
+      apt: name="{{ item }}" state=installed update_cache=yes
+      sudo: true
+      with_items:
+        - rubygems
+      when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == "12.04"
+ 
+    - name: Install ubuntu 14.04 ansible dependencies
+      apt: name="{{ item }}" state=installed update_cache=yes
+      sudo: true
+      with_items:
+        - rubygems-integration
+      when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == "14.04"
 
     - name: Install ansible pip deps
       sudo: true
