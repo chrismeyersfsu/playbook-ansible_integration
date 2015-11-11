@@ -2,7 +2,6 @@
   connection: local
   vars:
     ansible_python_interpreter: '/usr/bin/env python'
-    credentials_file: ''
     slaves:
       #- distribution: "Ubuntu"
       #  version: "12.04"
@@ -33,7 +32,8 @@
 - hosts: dynamic_hosts
   sudo: true
   vars:
-    test_flags: '--skip-tags "test_template,test_filters"'
+    credentials_file: ''
+    test_flags: ""
     make_target: "non_destructive"
   tasks:
 
