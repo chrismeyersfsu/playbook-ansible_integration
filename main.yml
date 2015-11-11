@@ -130,5 +130,6 @@
       ec2:
         state: absent
         region: 'us-east-1'
-        instance_ids: "{{ item.instance_ids }}"
+        instance_ids: "{{ item['instances'].instance_ids }}"
       with_items: ec2.results
+
