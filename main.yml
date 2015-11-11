@@ -39,7 +39,6 @@
     # Wait for cloud-init to finish on ec2 instance (problem with ubuntu)
     # So do the sync first
     - name: Sync ansible repo to ec2 instance
-      #copy: src="{{ sync_dir }}" dest="~/ansible"
       synchronize: 
         src: "{{ sync_dir }}"
         dest: "~/ansible"
@@ -111,6 +110,7 @@
         - paramiko
 
     - name: Get ansible source dir
+      sudo: false
       shell: "cd ~ && pwd"
       register: results
 
