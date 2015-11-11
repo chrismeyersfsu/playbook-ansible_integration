@@ -30,7 +30,6 @@
     name: "{{ ec2.results[item.0]['instances'][0]['public_ip'] }}"
     groups: dynamic_hosts
     ansible_ssh_private_key_file: '{{ pem_path }}'
-    #ansible_ssh_user: "{{ slaves[item.1]['ssh_user'] }}"
     ansible_ssh_user: "{{ item.1.ssh_user }}"
     ec2_vars: "{{ ec2.results[item.0]['instances'][0] }}"
   with_indexed_items: slaves
