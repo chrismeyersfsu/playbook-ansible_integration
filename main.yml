@@ -6,33 +6,40 @@
     test_flags: '--skip-tags "test_template,test_filters"'
     credentials_file: ''
     slaves:
-      - distribution: "Ubuntu"
-        version: "12.04"
-        image: "ami-2ccc7a44"
-        ssh_user: "ubuntu"
-        platform: "ubuntu-12.04-x86_64"
+      #- distribution: "Ubuntu"
+      #  version: "12.04"
+      #  image: "ami-2ccc7a44"
+      #  ssh_user: "ubuntu"
+      #  platform: "ubuntu-12.04-x86_64"
       - distribution: "Ubuntu"
         version: "14.04"
         image: "ami-9a562df2"
         ssh_user: "ubuntu"
         platform: "ubuntu-14.04-x86_64"
-      - distribution: "CentOS"
-        version: "6.5"
-        image: "ami-8997afe0"
-        ssh_user: "root"
-        platform: "centos-6.5-x86_64"
-      - distribution: "CentOS"
-        version: "7"
-        image: "ami-96a818fe"
-        ssh_user: "centos"
-        platform: "centos-7-x86_64"
+      #- distribution: "CentOS"
+      #  version: "6.5"
+      #  image: "ami-8997afe0"
+      #  ssh_user: "root"
+      #  platform: "centos-6.5-x86_64"
+      #- distribution: "CentOS"
+      #  version: "7"
+      #  image: "ami-96a818fe"
+      #  ssh_user: "centos"
+      #  platform: "centos-7-x86_64"
           
   tasks:
     - include: ec2.yml
       when: groups['dynamic_hosts'] is not defined
 
 - hosts: dynamic_hosts
+  sudo: true
   tasks:
+
+    # Wait for cloud-init to finish on ec2 instance (problem with ubuntu)
+    # So do the sync first
+    - name: Sync ansible repo to ec2 instance
+      copy: src="{{ sync_dir }}" dest="~/ansible"
+
     - name: Install RH epel
       yum: name="epel-release" state=installed
       sudo: true
@@ -57,6 +64,9 @@
         - libselinux-python
       when: ansible_os_family == 'RedHat'
 
+    - apt: update_cache=yes
+      when: ansible_os_family == 'Debian'
+
     - name: Install Debian ansible dependencies
       apt: name="{{ item }}" state=installed update_cache=yes
       sudo: true
@@ -75,6 +85,7 @@
       sudo: true
       with_items:
         - rubygems
+        - python-devel
       when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == "12.04"
  
     - name: Install ubuntu 14.04 ansible dependencies
@@ -82,6 +93,7 @@
       sudo: true
       with_items:
         - rubygems-integration
+        - python-dev
       when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == "14.04"
 
     - name: Install ansible pip deps
@@ -91,9 +103,6 @@
         - PyYAML
         - Jinja2
         - paramiko
-
-    - name: Sync ansible repo to ec2 instance
-      synchronize: src="{{ sync_dir }}" dest="~/ansible"
 
     - name: Get ansible source dir
       shell: "cd ~ && pwd"
