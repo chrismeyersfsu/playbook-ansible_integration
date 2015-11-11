@@ -37,6 +37,7 @@
     - mercurial
     - git
     - unzip
+    - python-dev
   when: ansible_os_family == 'Debian'
 
 - name: Install ubuntu 12.04 ansible dependencies
@@ -44,7 +45,6 @@
   sudo: true
   with_items:
     - rubygems
-    - python-devel
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == "12.04"
 
 - name: Install ubuntu 14.04 ansible dependencies
@@ -52,7 +52,6 @@
   sudo: true
   with_items:
     - rubygems-integration
-    - python-dev
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_version == "14.04"
 
 - name: Install ansible pip deps
