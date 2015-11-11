@@ -34,11 +34,7 @@
     credentials_file: ''
     test_flags: ""
     make_target: "non_destructive"
-  pre_tasks:
-    - name: Sync ansible repo to ec2 instance
-      synchronize: 
-        src: "{{ sync_dir }}/"
-        dest: "~/ansible"
+  #pre_tasks:
   roles:
     - { role: install_deps, tags: install_deps }
     - { role: run_integration, tags: run_integration }
@@ -52,6 +48,6 @@
         instance_ids: "{{ hostvars[item]['ec2_instance_ids'] }}"
       with_items: groups['dynamic_hosts']
 
-    - fail:
-        msg: "{{ test_results }}"
+    - name: Fail
+      shell: 'echo "{{ inventory_hostname }} Failed" && exit 1'
       when: "test_results.rc != 0"
