@@ -42,8 +42,6 @@
       synchronize: 
         src: "{{ sync_dir }}/"
         dest: "~/ansible"
-        rsync_opts:
-          - "--exclude=.git"
 
     - name: Install RH epel
       yum: name="epel-release" state=installed
