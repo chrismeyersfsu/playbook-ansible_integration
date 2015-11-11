@@ -120,6 +120,7 @@
         CREDENTIALS_FILE: "{{ credentials_file }}"
       args:
         chdir: "{{ results.stdout }}/ansible"
+      register: test_results
        
 - hosts: all
   connection: local 
@@ -133,4 +134,5 @@
         region: 'us-east-1'
         instance_ids: "{{ item['instance_ids'] }}"
       with_items: ec2.results
+
 

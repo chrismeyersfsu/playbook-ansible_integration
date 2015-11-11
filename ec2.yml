@@ -10,7 +10,7 @@
     aws_access_key: "{{ aws_access_key|default(lookup('env', 'AWS_ACCESS_KEY')) }}"
     aws_secret_key: "{{ aws_secret_key|default(lookup('env', 'AWS_SECRET_KEY')) }}"
     instance_tags:
-      jenkins_build: jenkins_ansible_pr_test
+      jenkins: jenkins_ansible_pr_test
   register: ec2
   with_items: slaves
 # We could do an async here, that would speed things up
