@@ -1,0 +1,15 @@
+---
+- name: Get ansible source dir
+  sudo: false
+  shell: "cd ~ && pwd"
+  register: results
+
+- shell: ". hacking/env-setup && cd test/integration && make {{ make_target }}"
+  sudo: true
+  environment:
+    TEST_FLAGS: "{{ test_flags }}"
+    CREDENTIALS_FILE: "{{ credentials_file }}"
+  args:
+    chdir: "{{ results.stdout }}/ansible"
+  register: test_results
+  ignore_errors: true
