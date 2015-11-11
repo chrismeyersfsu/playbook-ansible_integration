@@ -28,6 +28,7 @@
       #  platform: "centos-7-x86_64"
           
   tasks:
+    - debug: var=ansible_version
     - include: ec2.yml
       when: groups['dynamic_hosts'] is not defined
 
