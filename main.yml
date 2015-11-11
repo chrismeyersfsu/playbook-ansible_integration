@@ -126,10 +126,11 @@
   vars:
     ansible_python_interpreter: '/usr/bin/env python'
   tasks:
+    - debug: var=ec2.results
     - name: Terminate ec2 instances
       ec2:
         state: absent
         region: 'us-east-1'
-        instance_ids: "{{ item['instances'].instance_ids }}"
+        instance_ids: "{{ item['instance_ids'] }}"
       with_items: ec2.results
 
