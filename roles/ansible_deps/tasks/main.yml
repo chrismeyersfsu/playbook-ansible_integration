@@ -1,8 +1,4 @@
 ---
-- name: Remove tty sudo requirement
-  sudo: true
-  lineinfile: regexp="^\s+\w+\s+requiretty" dest=/etc/sudoers state=absent
-
 - name: Install RH epel
   yum: name="epel-release" state=installed
   sudo: true
@@ -65,4 +61,9 @@
     - PyYAML
     - Jinja2
     - paramiko
+
+- name: Remove tty sudo requirement
+  sudo: true
+  lineinfile: "dest=/etc/sudoers regexp='^Defaults[ ,       ]*requiretty'  line='#Defaults    requiretty'"
+
 

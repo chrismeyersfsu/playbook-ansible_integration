@@ -36,8 +36,12 @@
     make_target: "non_destructive"
   #pre_tasks:
   roles:
-    - { role: install_deps, tags: install_deps }
-    - { role: run_integration, tags: run_integration }
+    - { role: ansible_deps, tags: ansible_deps }
+    - { role: run_integration,
+        tags: run_integration,
+        run_integration_test_flags: "{{ test_flags }}",
+        run_integration_credentials_file: "{{ credentials_file }}",
+        run_integration_make_target: "{{ make_target }}", }
   tasks:
     - name: Kill ec2 instances
       sudo: false
@@ -46,8 +50,9 @@
         state: absent
         region: 'us-east-1'
         instance_ids: "{{ hostvars[item]['ec2_instance_ids'] }}"
+      when: hostvars[item]['ec2_instance_ids'] is defined
       with_items: groups['dynamic_hosts']
 
     - name: Fail
-      shell: 'echo "{{ inventory_hostname }} Failed" && exit 1'
+      shell: 'echo "{{ hostvars[inventory_hostname] }}, Failed" && exit 1'
       when: "test_results.rc != 0"
